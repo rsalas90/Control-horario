@@ -13,18 +13,13 @@ body{
   color:#111;
 }
 .wrap{
-  max-width:760px;
+  max-width:800px;
   margin:auto;
   padding:18px;
 }
-h1{
-  font-size:26px;
-  margin-bottom:6px;
-}
-.sub{
-  color:#666;
-  margin-bottom:18px;
-}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#666;margin-bottom:18px}
+
 .card{
   background:#fff;
   border-radius:18px;
@@ -32,18 +27,21 @@ h1{
   margin-bottom:14px;
   box-shadow:0 2px 10px rgba(0,0,0,.06);
 }
+
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
+
 label{
   display:block;
   font-size:14px;
   color:#555;
   margin-bottom:5px;
 }
-input,select{
+
+input,select,textarea{
   width:100%;
   box-sizing:border-box;
   padding:12px;
@@ -52,30 +50,37 @@ input,select{
   font-size:17px;
   background:white;
 }
+
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
 button{
-  width:100%;
   border:0;
   border-radius:12px;
-  padding:14px;
+  padding:12px 14px;
   margin-top:12px;
-  font-size:17px;
+  font-size:16px;
 }
-.primary{
-  background:#111;
-  color:white;
+
+.full{width:100%}
+.primary{background:#111;color:white}
+.secondary{background:#e9eaec;color:#111}
+.danger{background:#f7dede;color:#7c1111}
+
+.botones{
+  display:flex;
+  gap:8px;
 }
-.secondary{
-  background:#e9eaec;
-}
-.danger{
-  background:#f7dede;
-  color:#7c1111;
-}
+.botones button{flex:1}
+
 .stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:10px;
 }
+
 .stat{
   background:#f6f6f7;
   border-radius:12px;
@@ -83,25 +88,51 @@ button{
   text-align:center;
   font-size:13px;
 }
+
 .stat b{
   display:block;
   margin-top:5px;
   font-size:20px;
 }
+
 table{
   width:100%;
   border-collapse:collapse;
   font-size:14px;
 }
+
 th,td{
-  padding:9px 5px;
+  padding:9px 6px;
   border-bottom:1px solid #eee;
   text-align:left;
+  vertical-align:top;
 }
-.small{
-  color:#666;
+
+.acciones{
+  white-space:nowrap;
+}
+
+.acciones button{
+  margin:2px;
+  padding:7px 9px;
   font-size:13px;
 }
+
+.small{
+  color:#666;
+  font-size:12px;
+}
+
+.comentario{
+  max-width:220px;
+  white-space:normal;
+}
+
+.editando{
+  background:#fff8dc;
+  border:1px solid #e4cb69;
+}
+
 @media(max-width:600px){
   .grid,.stats{
     grid-template-columns:1fr;
@@ -114,14 +145,16 @@ th,td{
 </head>
 
 <body>
+
 <div class="wrap">
 
 <h1>Control horario</h1>
+
 <div class="sub">
 Horario habitual: 11:30–20:30
 </div>
 
-<div class="card">
+<div class="card" id="formCard">
 
 <div class="grid">
 
@@ -145,13 +178,39 @@ Horario habitual: 11:30–20:30
 <input id="salida" type="time">
 </div>
 
+<div>
+<label>Minutos a descontar de DEBE</label>
+<input id="descuentoDebe" type="number" min="0" step="1" value="0">
+<div class="small">
+Ej.: pon 30 si hay 30 min de comida que no quieres contar como tiempo debido.
+</div>
 </div>
 
-<button class="primary" onclick="guardar()">
+<div>
+<label>Comentario</label>
+<textarea id="comentario"
+placeholder="Ej.: salida anticipada; 30 min de comida no computables"></textarea>
+</div>
+
+</div>
+
+<input id="editandoId" type="hidden">
+
+<div class="botones">
+<button id="guardarBtn" class="primary" onclick="guardar()">
 Guardar jornada
 </button>
 
+<button id="cancelarBtn"
+class="secondary"
+onclick="cancelarEdicion()"
+style="display:none">
+Cancelar
+</button>
 </div>
+
+</div>
+
 
 <div class="card">
 
@@ -179,6 +238,7 @@ Extra a pagar
 
 </div>
 
+
 <div class="card">
 
 <h3>Histórico del mes</h3>
@@ -195,6 +255,7 @@ Extra a pagar
 <th>Extra</th>
 <th>Debe</th>
 <th>€</th>
+<th>Comentario</th>
 <th></th>
 </tr>
 </thead>
@@ -207,13 +268,14 @@ Extra a pagar
 
 </div>
 
+
 <div class="card">
 
-<button class="secondary" onclick="exportar()">
+<button class="secondary full" onclick="exportar()">
 Exportar copia
 </button>
 
-<button class="danger" onclick="borrarTodo()">
+<button class="danger full" onclick="borrarTodo()">
 Borrar todos los datos
 </button>
 
@@ -225,6 +287,7 @@ Los datos se guardan únicamente en este navegador.
 
 </div>
 
+
 <script>
 
 const CLAVE="controlHorarioHogar_v2";
@@ -235,14 +298,14 @@ function minutos(hora){
 }
 
 function hhmm(min){
-  min=Math.max(0,Math.round(min));
+  min=Math.max(0,Math.round(Number(min)||0));
   const h=Math.floor(min/60);
   const m=min%60;
   return h+":"+String(m).padStart(2,"0");
 }
 
 function euro(x){
-  return x.toLocaleString(
+  return Number(x||0).toLocaleString(
     "es-ES",
     {style:"currency",currency:"EUR"}
   );
@@ -273,6 +336,60 @@ function nombreMes(clave){
   return nombres[Number(m)-1]+" "+a;
 }
 
+function fechaBonita(fecha){
+  const [a,m,d]=fecha.split("-");
+  return `${d}/${m}/${a}`;
+}
+
+function hoyLocal(){
+  const d=new Date();
+  const a=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const dia=String(d.getDate()).padStart(2,"0");
+  return `${a}-${m}-${dia}`;
+}
+
+function calcular(entrada,salida,tarifa,descuentoDebe){
+
+  const e=minutos(entrada);
+  const s=minutos(salida);
+
+  const inicio=minutos("11:30");
+  const fin=minutos("20:30");
+
+  let extra=0;
+  let debeBruto=0;
+
+  if(e<inicio){
+    extra+=inicio-e;
+  }else if(e>inicio){
+    debeBruto+=e-inicio;
+  }
+
+  if(s>fin){
+    extra+=s-fin;
+  }else if(s<fin){
+    debeBruto+=fin-s;
+  }
+
+  descuentoDebe=Math.max(0,Number(descuentoDebe)||0);
+
+  const debe=Math.max(
+    0,
+    debeBruto-descuentoDebe
+  );
+
+  const importe=(extra/60)*tarifa;
+
+  return {
+    extra,
+    debeBruto,
+    descuentoDebe,
+    debe,
+    importe
+  };
+}
+
 function guardar(){
 
   const fecha=document.getElementById("fecha").value;
@@ -282,78 +399,158 @@ function guardar(){
     document.getElementById("tarifa").value||0
   );
 
+  const descuentoDebe=parseInt(
+    document.getElementById("descuentoDebe").value||0,
+    10
+  );
+
+  const comentario=
+    document.getElementById("comentario").value.trim();
+
+  const editandoId=
+    document.getElementById("editandoId").value;
+
   if(!fecha||!entrada||!salida){
     alert("Completa fecha, llegada y salida");
     return;
   }
 
-  const e=minutos(entrada);
-  const s=minutos(salida);
-
-  const inicio=minutos("11:30");
-  const fin=minutos("20:30");
-
-  if(s<=e){
+  if(minutos(salida)<=minutos(entrada)){
     alert("La salida debe ser posterior a la llegada");
     return;
   }
 
-  let extra=0;
-  let debe=0;
-
-  if(e<inicio){
-    extra += inicio-e;
-  }else if(e>inicio){
-    debe += e-inicio;
-  }
-
-  if(s>fin){
-    extra += s-fin;
-  }else if(s<fin){
-    debe += fin-s;
-  }
-
-  const importe=(extra/60)*tarifa;
-
-  const d=datos();
-
-  d.push({
-    id:Date.now(),
-    fecha,
+  const calc=calcular(
     entrada,
     salida,
-    extra,
-    debe,
     tarifa,
-    importe
-  });
-
-  d.sort((a,b)=>
-    a.fecha.localeCompare(b.fecha) ||
-    a.entrada.localeCompare(b.entrada)
+    descuentoDebe
   );
+
+  let d=datos();
+
+  if(editandoId){
+
+    const id=Number(editandoId);
+
+    d=d.map(x=>{
+
+      if(Number(x.id)!==id){
+        return x;
+      }
+
+      return {
+        ...x,
+        fecha,
+        entrada,
+        salida,
+        tarifa,
+        descuentoDebe:calc.descuentoDebe,
+        comentario,
+        extra:calc.extra,
+        debeBruto:calc.debeBruto,
+        debe:calc.debe,
+        importe:calc.importe
+      };
+
+    });
+
+  }else{
+
+    d.push({
+      id:Date.now(),
+      fecha,
+      entrada,
+      salida,
+      tarifa,
+      descuentoDebe:calc.descuentoDebe,
+      comentario,
+      extra:calc.extra,
+      debeBruto:calc.debeBruto,
+      debe:calc.debe,
+      importe:calc.importe
+    });
+
+  }
 
   guardarDatos(d);
 
   actualizarMeses();
 
-  document.getElementById("mes").value=mesClave(fecha);
+  document.getElementById("mes").value=
+    mesClave(fecha);
+
+  cancelarEdicion();
 
   mostrar();
+}
 
+function editar(id){
+
+  const x=datos().find(
+    r=>Number(r.id)===Number(id)
+  );
+
+  if(!x)return;
+
+  document.getElementById("fecha").value=x.fecha;
+  document.getElementById("entrada").value=x.entrada;
+  document.getElementById("salida").value=x.salida;
+  document.getElementById("tarifa").value=x.tarifa ?? 7;
+  document.getElementById("descuentoDebe").value=
+    x.descuentoDebe ?? 0;
+
+  document.getElementById("comentario").value=
+    x.comentario ?? "";
+
+  document.getElementById("editandoId").value=x.id;
+
+  document.getElementById("guardarBtn").textContent=
+    "Guardar cambios";
+
+  document.getElementById("cancelarBtn").style.display=
+    "block";
+
+  document.getElementById("formCard")
+    .classList.add("editando");
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+function cancelarEdicion(){
+
+  document.getElementById("editandoId").value="";
+
+  document.getElementById("fecha").value=hoyLocal();
   document.getElementById("entrada").value="";
   document.getElementById("salida").value="";
+  document.getElementById("descuentoDebe").value="0";
+  document.getElementById("comentario").value="";
+
+  document.getElementById("guardarBtn").textContent=
+    "Guardar jornada";
+
+  document.getElementById("cancelarBtn").style.display=
+    "none";
+
+  document.getElementById("formCard")
+    .classList.remove("editando");
 }
 
 function actualizarMeses(){
 
   const d=datos();
 
-  let meses=[...new Set(
-    d.map(x=>mesClave(x.fecha))
-  )];
+  let meses=[
+    ...new Set(
+      d.map(x=>mesClave(x.fecha))
+    )
+  ];
 
-  const actual=new Date().toISOString().slice(0,7);
+  const actual=hoyLocal().slice(0,7);
 
   if(!meses.includes(actual)){
     meses.push(actual);
@@ -362,7 +559,6 @@ function actualizarMeses(){
   meses.sort().reverse();
 
   const sel=document.getElementById("mes");
-
   const anterior=sel.value;
 
   sel.innerHTML="";
@@ -383,7 +579,13 @@ function actualizarMeses(){
 
 function eliminar(id){
 
-  const d=datos().filter(x=>x.id!==id);
+  if(!confirm("¿Eliminar esta jornada?")){
+    return;
+  }
+
+  const d=datos().filter(
+    x=>Number(x.id)!==Number(id)
+  );
 
   guardarDatos(d);
 
@@ -396,9 +598,13 @@ function mostrar(){
 
   const mes=document.getElementById("mes").value;
 
-  const d=datos().filter(
-    x=>mesClave(x.fecha)===mes
-  );
+  const d=datos()
+    .filter(x=>mesClave(x.fecha)===mes)
+    .sort((a,b)=>
+      b.fecha.localeCompare(a.fecha) ||
+      b.entrada.localeCompare(a.entrada) ||
+      Number(b.id)-Number(a.id)
+    );
 
   let extra=0;
   let debe=0;
@@ -410,30 +616,63 @@ function mostrar(){
 
   d.forEach(x=>{
 
-    extra+=x.extra;
-    debe+=x.debe;
-    pago+=x.importe;
+    const descuento=Number(x.descuentoDebe)||0;
+
+    /*
+      Compatibilidad con registros antiguos:
+      si no tenían descuento, conservamos
+      los valores que ya estaban guardados.
+    */
+    const extraRegistro=Number(x.extra)||0;
+    const debeRegistro=Number(x.debe)||0;
+    const importeRegistro=Number(x.importe)||0;
+
+    extra+=extraRegistro;
+    debe+=debeRegistro;
+    pago+=importeRegistro;
+
+    const ajuste=
+      descuento>0
+      ? `<div class="small">−${descuento} min ajuste</div>`
+      : "";
+
+    const comentario=
+      (x.comentario||"")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
 
     const tr=document.createElement("tr");
 
     tr.innerHTML=`
-      <td>${x.fecha}</td>
+      <td>${fechaBonita(x.fecha)}</td>
       <td>${x.entrada}</td>
       <td>${x.salida}</td>
-      <td>${hhmm(x.extra)}</td>
-      <td>${hhmm(x.debe)}</td>
-      <td>${euro(x.importe)}</td>
+      <td>${hhmm(extraRegistro)}</td>
       <td>
+        ${hhmm(debeRegistro)}
+        ${ajuste}
+      </td>
+      <td>${euro(importeRegistro)}</td>
+      <td class="comentario">
+        ${comentario || "<span class='small'>—</span>"}
+      </td>
+      <td class="acciones">
         <button
-        style="padding:7px;margin:0"
-        onclick="eliminar(${x.id})">
-        ✕
+          class="secondary"
+          onclick="editar(${x.id})">
+          Editar
+        </button>
+
+        <button
+          class="danger"
+          onclick="eliminar(${x.id})">
+          ✕
         </button>
       </td>
     `;
 
     tabla.appendChild(tr);
-
   });
 
   document.getElementById("extraTotal").textContent=
@@ -471,10 +710,7 @@ function exportar(){
     document.createElement("a");
 
   a.href=url;
-
-  a.download=
-    "copia-control-horario.json";
-
+  a.download="copia-control-horario.json";
   a.click();
 
   URL.revokeObjectURL(url);
@@ -482,19 +718,17 @@ function exportar(){
 
 function borrarTodo(){
 
-  if(
-    confirm(
-      "¿Seguro que quieres borrar todo el histórico?"
-    )
-  ){
+  if(confirm(
+    "¿Seguro que quieres borrar TODO el histórico?"
+  )){
     localStorage.removeItem(CLAVE);
+    cancelarEdicion();
     actualizarMeses();
     mostrar();
   }
 }
 
-document.getElementById("fecha").value=
-  new Date().toISOString().slice(0,10);
+document.getElementById("fecha").value=hoyLocal();
 
 actualizarMeses();
 mostrar();
