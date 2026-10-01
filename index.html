@@ -8,60 +8,39 @@
 <style>
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  margin:0;
-  background:#f3f4f6;
-  color:#111;
+  margin:0;background:#f3f4f6;color:#111
 }
-.wrap{
-  max-width:800px;
-  margin:auto;
-  padding:18px;
-}
+.wrap{max-width:850px;margin:auto;padding:18px}
 h1{font-size:26px;margin-bottom:6px}
+h3{margin-top:0}
 .sub{color:#666;margin-bottom:18px}
 
 .card{
-  background:#fff;
-  border-radius:18px;
-  padding:16px;
-  margin-bottom:14px;
-  box-shadow:0 2px 10px rgba(0,0,0,.06);
+  background:#fff;border-radius:18px;padding:16px;
+  margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)
 }
 
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:12px
 }
 
 label{
-  display:block;
-  font-size:14px;
-  color:#555;
-  margin-bottom:5px;
+  display:block;font-size:14px;color:#555;margin-bottom:5px
 }
 
 input,select,textarea{
-  width:100%;
-  box-sizing:border-box;
-  padding:12px;
-  border:1px solid #ccc;
-  border-radius:10px;
-  font-size:17px;
-  background:white;
+  width:100%;box-sizing:border-box;padding:12px;
+  border:1px solid #ccc;border-radius:10px;
+  font-size:17px;background:white
 }
 
-textarea{
-  min-height:80px;
-  resize:vertical;
-}
+textarea{min-height:70px}
 
 button{
-  border:0;
-  border-radius:12px;
-  padding:12px 14px;
-  margin-top:12px;
-  font-size:16px;
+  border:0;border-radius:12px;padding:12px 14px;
+  margin-top:12px;font-size:16px
 }
 
 .full{width:100%}
@@ -69,90 +48,77 @@ button{
 .secondary{background:#e9eaec;color:#111}
 .danger{background:#f7dede;color:#7c1111}
 
-.botones{
-  display:flex;
-  gap:8px;
-}
+.botones{display:flex;gap:8px}
 .botones button{flex:1}
 
 .stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:10px;
+  gap:10px
+}
+
+.stats4{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px
 }
 
 .stat{
-  background:#f6f6f7;
-  border-radius:12px;
-  padding:12px;
-  text-align:center;
-  font-size:13px;
+  background:#f6f6f7;border-radius:12px;
+  padding:12px;text-align:center;font-size:13px
 }
 
 .stat b{
-  display:block;
-  margin-top:5px;
-  font-size:20px;
+  display:block;margin-top:5px;font-size:20px
+}
+
+.saldoGrande{
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  margin:14px 0 5px
+}
+
+.saldoTexto{
+  text-align:center;color:#666;font-size:13px
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
+  width:100%;border-collapse:collapse;font-size:14px
 }
 
 th,td{
-  padding:9px 6px;
-  border-bottom:1px solid #eee;
-  text-align:left;
-  vertical-align:top;
+  padding:9px 6px;border-bottom:1px solid #eee;
+  text-align:left;vertical-align:top
 }
 
-.acciones{
-  white-space:nowrap;
-}
-
+.acciones{white-space:nowrap}
 .acciones button{
-  margin:2px;
-  padding:7px 9px;
-  font-size:13px;
+  margin:2px;padding:7px 9px;font-size:13px
 }
 
-.small{
-  color:#666;
-  font-size:12px;
-}
-
-.comentario{
-  max-width:220px;
-  white-space:normal;
-}
+.small{color:#666;font-size:12px}
+.comentario{max-width:220px;white-space:normal}
 
 .editando{
   background:#fff8dc;
-  border:1px solid #e4cb69;
+  border:1px solid #e4cb69
 }
 
-@media(max-width:600px){
-  .grid,.stats{
-    grid-template-columns:1fr;
+@media(max-width:650px){
+  .grid,.stats,.stats4{
+    grid-template-columns:1fr
   }
-  table{
-    font-size:12px;
-  }
+  table{font-size:12px}
 }
 </style>
 </head>
 
 <body>
-
 <div class="wrap">
 
 <h1>Control horario</h1>
-
-<div class="sub">
-Horario habitual: 11:30–20:30
-</div>
+<div class="sub">Horario habitual: 11:30–20:30</div>
 
 <div class="card" id="formCard">
 
@@ -182,14 +148,14 @@ Horario habitual: 11:30–20:30
 <label>Minutos a descontar de DEBE</label>
 <input id="descuentoDebe" type="number" min="0" step="1" value="0">
 <div class="small">
-Ej.: pon 30 si hay 30 min de comida que no quieres contar como tiempo debido.
+Ej.: 30 min de comida que no quieres contar.
 </div>
 </div>
 
 <div>
 <label>Comentario</label>
 <textarea id="comentario"
-placeholder="Ej.: salida anticipada; 30 min de comida no computables"></textarea>
+placeholder="Ej.: salió antes; 30 min de comida"></textarea>
 </div>
 
 </div>
@@ -217,15 +183,17 @@ Cancelar
 <label>Mes</label>
 <select id="mes" onchange="mostrar()"></select>
 
+<h3 style="margin-top:18px">Resumen del mes</h3>
+
 <div class="stats">
 
 <div class="stat">
-Extra acumulado
+Extra del mes
 <b id="extraTotal">0:00</b>
 </div>
 
 <div class="stat">
-Debe acumulado
+Debe generado
 <b id="debeTotal">0:00</b>
 </div>
 
@@ -233,6 +201,105 @@ Debe acumulado
 Extra a pagar
 <b id="pagoTotal">0,00 €</b>
 </div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>Saldo de horas que debe</h3>
+
+<div class="stats4">
+
+<div class="stat">
+Arrastre anterior
+<b id="arrastre">0:00</b>
+</div>
+
+<div class="stat">
+Generado este mes
+<b id="generadoMes">0:00</b>
+</div>
+
+<div class="stat">
+Ajustes del mes
+<b id="ajustesMes">0:00</b>
+</div>
+
+<div class="stat">
+Saldo actual
+<b id="saldoActual">0:00</b>
+</div>
+
+</div>
+
+<div id="estadoSaldo" class="saldoTexto"></div>
+
+<hr style="border:0;border-top:1px solid #eee;margin:20px 0">
+
+<h3>Añadir ajuste manual</h3>
+
+<div class="grid">
+
+<div>
+<label>Fecha del ajuste</label>
+<input id="fechaAjuste" type="date">
+</div>
+
+<div>
+<label>Tipo</label>
+<select id="tipoAjuste">
+<option value="restar">Restar horas que debe</option>
+<option value="sumar">Añadir horas que debe</option>
+</select>
+</div>
+
+<div>
+<label>Minutos</label>
+<input id="minutosAjuste"
+type="number"
+min="1"
+step="1"
+placeholder="Ej.: 45">
+</div>
+
+<div>
+<label>Comentario</label>
+<input id="comentarioAjuste"
+type="text"
+placeholder="Ej.: recuperó 45 min">
+</div>
+
+</div>
+
+<button class="primary full" onclick="guardarAjuste()">
+Guardar ajuste
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>Ajustes del mes</h3>
+
+<div style="overflow:auto">
+
+<table>
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Ajuste</th>
+<th>Comentario</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody id="tablaAjustes"></tbody>
+
+</table>
 
 </div>
 
@@ -280,7 +347,7 @@ Borrar todos los datos
 </button>
 
 <div class="small" style="margin-top:12px">
-Los datos se guardan únicamente en este navegador.
+Los datos se guardan en este navegador.
 </div>
 
 </div>
@@ -291,6 +358,7 @@ Los datos se guardan únicamente en este navegador.
 <script>
 
 const CLAVE="controlHorarioHogar_v2";
+const CLAVE_AJUSTES="controlHorarioHogarAjustes_v1";
 
 function minutos(hora){
   const p=hora.split(":").map(Number);
@@ -298,10 +366,11 @@ function minutos(hora){
 }
 
 function hhmm(min){
-  min=Math.max(0,Math.round(Number(min)||0));
-  const h=Math.floor(min/60);
-  const m=min%60;
-  return h+":"+String(m).padStart(2,"0");
+  min=Math.round(Number(min)||0);
+  const abs=Math.abs(min);
+  const h=Math.floor(abs/60);
+  const m=abs%60;
+  return (min<0?"−":"")+h+":"+String(m).padStart(2,"0");
 }
 
 function euro(x){
@@ -319,8 +388,20 @@ function datos(){
   }
 }
 
+function ajustes(){
+  try{
+    return JSON.parse(localStorage.getItem(CLAVE_AJUSTES)||"[]");
+  }catch{
+    return [];
+  }
+}
+
 function guardarDatos(d){
   localStorage.setItem(CLAVE,JSON.stringify(d));
+}
+
+function guardarAjustes(d){
+  localStorage.setItem(CLAVE_AJUSTES,JSON.stringify(d));
 }
 
 function mesClave(fecha){
@@ -347,6 +428,13 @@ function hoyLocal(){
   const m=String(d.getMonth()+1).padStart(2,"0");
   const dia=String(d.getDate()).padStart(2,"0");
   return `${a}-${m}-${dia}`;
+}
+
+function escapar(s){
+  return String(s||"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
 }
 
 function calcular(entrada,salida,tarifa,descuentoDebe){
@@ -481,7 +569,6 @@ function guardar(){
     mesClave(fecha);
 
   cancelarEdicion();
-
   mostrar();
 }
 
@@ -514,16 +601,12 @@ function editar(id){
   document.getElementById("formCard")
     .classList.add("editando");
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function cancelarEdicion(){
 
   document.getElementById("editandoId").value="";
-
   document.getElementById("fecha").value=hoyLocal();
   document.getElementById("entrada").value="";
   document.getElementById("salida").value="";
@@ -540,23 +623,117 @@ function cancelarEdicion(){
     .classList.remove("editando");
 }
 
-function actualizarMeses(){
+function guardarAjuste(){
 
-  const d=datos();
+  const fecha=
+    document.getElementById("fechaAjuste").value;
 
-  let meses=[
-    ...new Set(
-      d.map(x=>mesClave(x.fecha))
-    )
-  ];
+  const tipo=
+    document.getElementById("tipoAjuste").value;
 
-  const actual=hoyLocal().slice(0,7);
+  const min=Math.round(
+    Number(document.getElementById("minutosAjuste").value)||0
+  );
 
-  if(!meses.includes(actual)){
-    meses.push(actual);
+  const comentario=
+    document.getElementById("comentarioAjuste").value.trim();
+
+  if(!fecha || min<=0){
+    alert("Indica fecha y minutos");
+    return;
   }
 
-  meses.sort().reverse();
+  const valor=
+    tipo==="sumar"
+    ? min
+    : -min;
+
+  const a=ajustes();
+
+  a.push({
+    id:Date.now(),
+    fecha,
+    minutos:valor,
+    comentario
+  });
+
+  guardarAjustes(a);
+
+  actualizarMeses();
+
+  document.getElementById("mes").value=
+    mesClave(fecha);
+
+  document.getElementById("minutosAjuste").value="";
+  document.getElementById("comentarioAjuste").value="";
+
+  mostrar();
+}
+
+function eliminarAjuste(id){
+
+  if(!confirm("¿Eliminar este ajuste?")){
+    return;
+  }
+
+  const a=ajustes().filter(
+    x=>Number(x.id)!==Number(id)
+  );
+
+  guardarAjustes(a);
+
+  actualizarMeses();
+  mostrar();
+}
+
+function eliminar(id){
+
+  if(!confirm("¿Eliminar esta jornada?")){
+    return;
+  }
+
+  const d=datos().filter(
+    x=>Number(x.id)!==Number(id)
+  );
+
+  guardarDatos(d);
+  actualizarMeses();
+  mostrar();
+}
+
+function todosLosMeses(){
+
+  const meses=[
+    ...datos().map(x=>mesClave(x.fecha)),
+    ...ajustes().map(x=>mesClave(x.fecha)),
+    hoyLocal().slice(0,7)
+  ];
+
+  return [...new Set(meses)].sort();
+}
+
+function saldoAntesDeMes(mes){
+
+  let total=0;
+
+  datos().forEach(x=>{
+    if(mesClave(x.fecha)<mes){
+      total+=Number(x.debe)||0;
+    }
+  });
+
+  ajustes().forEach(x=>{
+    if(mesClave(x.fecha)<mes){
+      total+=Number(x.minutos)||0;
+    }
+  });
+
+  return total;
+}
+
+function actualizarMeses(){
+
+  const meses=todosLosMeses().sort().reverse();
 
   const sel=document.getElementById("mes");
   const anterior=sel.value;
@@ -573,25 +750,8 @@ function actualizarMeses(){
   if(meses.includes(anterior)){
     sel.value=anterior;
   }else{
-    sel.value=actual;
+    sel.value=hoyLocal().slice(0,7);
   }
-}
-
-function eliminar(id){
-
-  if(!confirm("¿Eliminar esta jornada?")){
-    return;
-  }
-
-  const d=datos().filter(
-    x=>Number(x.id)!==Number(id)
-  );
-
-  guardarDatos(d);
-
-  actualizarMeses();
-
-  mostrar();
 }
 
 function mostrar(){
@@ -606,41 +766,35 @@ function mostrar(){
       Number(b.id)-Number(a.id)
     );
 
+  const a=ajustes()
+    .filter(x=>mesClave(x.fecha)===mes)
+    .sort((x,y)=>
+      y.fecha.localeCompare(x.fecha) ||
+      Number(y.id)-Number(x.id)
+    );
+
   let extra=0;
-  let debe=0;
+  let debeMes=0;
   let pago=0;
 
   const tabla=document.getElementById("tabla");
-
   tabla.innerHTML="";
 
   d.forEach(x=>{
 
-    const descuento=Number(x.descuentoDebe)||0;
-
-    /*
-      Compatibilidad con registros antiguos:
-      si no tenían descuento, conservamos
-      los valores que ya estaban guardados.
-    */
     const extraRegistro=Number(x.extra)||0;
     const debeRegistro=Number(x.debe)||0;
     const importeRegistro=Number(x.importe)||0;
+    const descuento=Number(x.descuentoDebe)||0;
 
     extra+=extraRegistro;
-    debe+=debeRegistro;
+    debeMes+=debeRegistro;
     pago+=importeRegistro;
 
-    const ajuste=
+    const ajusteTexto=
       descuento>0
-      ? `<div class="small">−${descuento} min ajuste</div>`
+      ? `<div class="small">−${descuento} min ajuste diario</div>`
       : "";
-
-    const comentario=
-      (x.comentario||"")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;");
 
     const tr=document.createElement("tr");
 
@@ -651,23 +805,21 @@ function mostrar(){
       <td>${hhmm(extraRegistro)}</td>
       <td>
         ${hhmm(debeRegistro)}
-        ${ajuste}
+        ${ajusteTexto}
       </td>
       <td>${euro(importeRegistro)}</td>
       <td class="comentario">
-        ${comentario || "<span class='small'>—</span>"}
+        ${escapar(x.comentario) || "<span class='small'>—</span>"}
       </td>
       <td class="acciones">
-        <button
-          class="secondary"
-          onclick="editar(${x.id})">
-          Editar
+        <button class="secondary"
+        onclick="editar(${x.id})">
+        Editar
         </button>
 
-        <button
-          class="danger"
-          onclick="eliminar(${x.id})">
-          ✕
+        <button class="danger"
+        onclick="eliminar(${x.id})">
+        ✕
         </button>
       </td>
     `;
@@ -675,27 +827,97 @@ function mostrar(){
     tabla.appendChild(tr);
   });
 
+  let sumaAjustes=0;
+
+  const tablaAjustes=
+    document.getElementById("tablaAjustes");
+
+  tablaAjustes.innerHTML="";
+
+  a.forEach(x=>{
+
+    const valor=Number(x.minutos)||0;
+
+    sumaAjustes+=valor;
+
+    const texto=
+      valor>=0
+      ? `+${hhmm(valor)}`
+      : hhmm(valor);
+
+    const tr=document.createElement("tr");
+
+    tr.innerHTML=`
+      <td>${fechaBonita(x.fecha)}</td>
+      <td>${texto}</td>
+      <td>${escapar(x.comentario) || "—"}</td>
+      <td>
+        <button class="danger"
+        onclick="eliminarAjuste(${x.id})">
+        ✕
+        </button>
+      </td>
+    `;
+
+    tablaAjustes.appendChild(tr);
+  });
+
+  const arrastre=saldoAntesDeMes(mes);
+
+  const saldo=
+    arrastre +
+    debeMes +
+    sumaAjustes;
+
   document.getElementById("extraTotal").textContent=
     hhmm(extra);
 
   document.getElementById("debeTotal").textContent=
-    hhmm(debe);
+    hhmm(debeMes);
 
   document.getElementById("pagoTotal").textContent=
     euro(pago);
+
+  document.getElementById("arrastre").textContent=
+    hhmm(arrastre);
+
+  document.getElementById("generadoMes").textContent=
+    hhmm(debeMes);
+
+  document.getElementById("ajustesMes").textContent=
+    sumaAjustes>0
+    ? "+"+hhmm(sumaAjustes)
+    : hhmm(sumaAjustes);
+
+  document.getElementById("saldoActual").textContent=
+    hhmm(saldo);
+
+  const estado=
+    document.getElementById("estadoSaldo");
+
+  if(saldo>0){
+    estado.textContent=
+      "Pendiente: debe "+hhmm(saldo);
+  }else if(saldo<0){
+    estado.textContent=
+      "Saldo a su favor: "+hhmm(Math.abs(saldo));
+  }else{
+    estado.textContent=
+      "Saldo de horas a cero";
+  }
 }
 
 function exportar(){
 
-  const d=datos();
-
-  if(!d.length){
-    alert("No hay datos");
-    return;
-  }
+  const copia={
+    version:3,
+    fechaExportacion:new Date().toISOString(),
+    jornadas:datos(),
+    ajustes:ajustes()
+  };
 
   const contenido=
-    JSON.stringify(d,null,2);
+    JSON.stringify(copia,null,2);
 
   const blob=
     new Blob(
@@ -703,11 +925,9 @@ function exportar(){
       {type:"application/json"}
     );
 
-  const url=
-    URL.createObjectURL(blob);
+  const url=URL.createObjectURL(blob);
 
-  const a=
-    document.createElement("a");
+  const a=document.createElement("a");
 
   a.href=url;
   a.download="copia-control-horario.json";
@@ -719,9 +939,11 @@ function exportar(){
 function borrarTodo(){
 
   if(confirm(
-    "¿Seguro que quieres borrar TODO el histórico?"
+    "¿Seguro que quieres borrar TODO el histórico y todos los ajustes?"
   )){
     localStorage.removeItem(CLAVE);
+    localStorage.removeItem(CLAVE_AJUSTES);
+
     cancelarEdicion();
     actualizarMeses();
     mostrar();
@@ -729,6 +951,7 @@ function borrarTodo(){
 }
 
 document.getElementById("fecha").value=hoyLocal();
+document.getElementById("fechaAjuste").value=hoyLocal();
 
 actualizarMeses();
 mostrar();
